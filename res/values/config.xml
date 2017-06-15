@@ -154,4 +154,6 @@
     <item type="id" name="search_container_hotseat" />
     <item type="id" name="search_container_all_apps" />
 
+    <!-- Name of an icon pack. -->
+    <string name="iconPackPackageDefault" translatable="false">""</string>
 </resources>

@@ -124,6 +124,8 @@ public class LauncherModel extends BroadcastReceiver
      */
     static final BgDataModel sBgDataModel = new BgDataModel();
 
+    private final IconCache mIconCache;
+
     // Runnable to check if the shortcuts permission has changed.
     private final Runnable mShortcutPermissionCheckRunnable = new Runnable() {
         @Override
@@ -167,6 +169,7 @@ public class LauncherModel extends BroadcastReceiver
     LauncherModel(LauncherAppState app, IconCache iconCache, AppFilter appFilter) {
         mApp = app;
         mBgAllAppsList = new AllAppsList(iconCache, appFilter);
+        mIconCache = iconCache;
     }
 
     /** Runs the specified runnable immediately if called from the worker thread, otherwise it is
@@ -691,5 +694,9 @@ public class LauncherModel extends BroadcastReceiver
 
     public static void setWorkerPriority(final int priority) {
         Process.setThreadPriority(sWorkerThread.getThreadId(), priority);
+    }
+
+    public void clearIconCache() {
+        mIconCache.clearIconCache();
     }
 }
