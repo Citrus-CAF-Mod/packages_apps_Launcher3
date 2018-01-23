@@ -117,13 +117,28 @@
 
         <!--
         Pixel
-        -->
+        --> 
+        <activity
+            android:name="com.android.launcher3.search.AppLaunchActivity"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter android:priority="1">
+                <action android:name="com.android.launcher3.search.APP_LAUNCH"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data
+                    android:mimeType="vnd.android.cursor.dir/vnd.android.search.suggest"
+                    android:scheme="content"/>
+            </intent-filter>
+        </activity>
         <receiver android:name="com.android.launcher3.smartspace.SmartspaceBroadcastReceiver">
             <intent-filter>
                 <action android:name="com.android.launcher3.UPDATE_SMARTSPACE" />
 
             </intent-filter>
         </receiver>
+        <provider
+            android:authorities="com.android.launcher3.appssearch"
+            android:exported="true"
+            android:name="com.android.launcher3.search.AppSearchProvider" />
 
         <!-- ENABLE_FOR_TESTING
 
