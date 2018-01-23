@@ -2,11 +2,22 @@ package com.android.launcher3.custom;
 
 import android.content.res.Configuration;
 
+import com.android.launcher3.AppInfo;
 import com.android.launcher3.Launcher;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
+import com.android.launcher3.util.ComponentKeyMapper;
+import com.google.android.libraries.launcherclient.GoogleNow;
+
+import java.util.List;
 
 public class CustomLauncherActivity extends Launcher {
+    private CustomLauncher mLauncher;
+
+    public CustomLauncherActivity() {
+        mLauncher = new CustomLauncher(this);
+    }
+
     public void overrideTheme(boolean isDark, boolean supportsDarkText) {
         int flags = Utilities.getDevicePrefs(this).getInt("pref_persistent_flags", 0);
         int orientFlag = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 16 : 8;
@@ -20,5 +31,13 @@ public class CustomLauncherActivity extends Launcher {
         } else {
             super.overrideTheme(isDark, supportsDarkText);
         }
+    }
+
+    public List<ComponentKeyMapper<AppInfo>> getPredictedApps() {
+        return mLauncher.fA.getPredictedApps();
+    }
+
+    public GoogleNow getGoogleNow() {
+        return mLauncher.fy;
     }
 }
