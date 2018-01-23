@@ -20,7 +20,7 @@ import com.android.launcher3.R;
 import com.android.launcher3.smartspace.SmartspaceController;
 import com.android.launcher3.SettingsActivity;
 
-public class SettingsActivity extends SettingsActivity implements PreferenceFragment.OnPreferenceStartFragmentCallback {
+public class CustomSettingsActivity extends SettingsActivity implements PreferenceFragment.OnPreferenceStartFragmentCallback {
     public final static String SHOW_PREDICTIONS_PREF = "pref_show_predictions";
     public final static String ENABLE_MINUS_ONE_PREF = "pref_enable_minus_one";
     public final static String SMARTSPACE_PREF = "pref_smartspace";
