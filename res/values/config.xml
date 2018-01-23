@@ -105,10 +105,10 @@
     <string name="app_filter_class" translatable="false">com.android.launcher3.custom.CustomAppFilter</string>
 
     <!-- Name of an icon provider class. -->
-    <string name="icon_provider_class" translatable="false"></string>
+    <string name="icon_provider_class" translatable="false">com.android.launcher3.DynamicIconProvider</string>
 
     <!-- Name of a drawable factory class. -->
-    <string name="drawable_factory_class" translatable="false"></string>
+    <string name="drawable_factory_class" translatable="false">com.android.launcher3.DynamicDrawableFactory</string>
 
     <!-- Name of a user event dispatcher class. -->
     <string name="user_event_dispatcher_class" translatable="false"></string>
