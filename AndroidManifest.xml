@@ -115,6 +115,16 @@
             android:writePermission="com.android.launcher3.permission.WRITE_SETTINGS"
             android:readPermission="com.android.launcher3.permission.READ_SETTINGS" />
 
+        <!--
+        Pixel
+        -->
+        <receiver android:name="com.android.launcher3.smartspace.SmartspaceBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.android.launcher3.UPDATE_SMARTSPACE" />
+
+            </intent-filter>
+        </receiver>
+
         <!-- ENABLE_FOR_TESTING
 
         <activity
