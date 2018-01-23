@@ -74,6 +74,11 @@
         android:defaultValue=""
         android:persistent="false" />
 
-    </PreferenceScreen>
+    <com.android.launcher3.custom.CustomIconPreference
+        android:key="pref_icon_pack"
+        android:title="@string/pref_icon_pack"
+        android:summary="%s"
+        android:defaultValue=""
+        android:persistent="true" />
 
 </PreferenceScreen>
