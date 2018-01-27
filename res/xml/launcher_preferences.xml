@@ -51,6 +51,13 @@
         android:persistent="true"
         />
 
+    <SwitchPreference
+        android:key="pref_show_predictions"
+        android:title="@string/title_app_suggestions"
+        android:summary="@string/summary_app_suggestions"
+        android:defaultValue="true"
+       />
+       
     <ListPreference
         android:key="pref_override_icon_shape"
         android:title="@string/icon_shape_override_label"
@@ -59,5 +66,12 @@
         android:entryValues="@array/icon_shape_override_paths_values"
         android:defaultValue=""
         android:persistent="false" />
+
+    <PreferenceScreen
+        android:key="pref_smartspace"
+        android:title="@string/smartspace_preferences_in_settings"
+        android:summary="@string/smartspace_preferences_in_settings_desc"
+        android:persistent="false"
+        />
 
 </PreferenceScreen>

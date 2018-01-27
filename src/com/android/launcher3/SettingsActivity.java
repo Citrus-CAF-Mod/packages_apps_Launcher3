@@ -31,22 +31,30 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
+import android.preference.TwoStatePreference;
+import android.util.Log;
 
 import com.android.launcher3.graphics.IconShapeOverride;
 import com.android.launcher3.notification.NotificationListener;
+import com.android.launcher3.smartspace.SmartspaceController;
 import com.android.launcher3.util.SettingsObserver;
 import com.android.launcher3.views.ButtonPreference;
+
 
 /**
  * Settings activity for Launcher. Currently implements the following setting: Allow rotation
  */
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends Activity implements PreferenceFragment.OnPreferenceStartFragmentCallback {
 
     private static final String ICON_BADGING_PREFERENCE_KEY = "pref_icon_badging";
     /** Hidden field Settings.Secure.NOTIFICATION_BADGING */
     public static final String NOTIFICATION_BADGING = "notification_badging";
     /** Hidden field Settings.Secure.ENABLED_NOTIFICATION_LISTENERS */
     private static final String NOTIFICATION_ENABLED_LISTENERS = "enabled_notification_listeners";
+    /** Prediction */
+    public final static String SHOW_PREDICTIONS_PREF = "pref_show_predictions";
+    /** Smartspace */
+    public final static String SMARTSPACE_PREF = "pref_smartspace";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +123,20 @@ public class SettingsActivity extends Activity {
                     getPreferenceScreen().removePreference(iconShapeOverride);
                 }
             }
+
+           findPreference(SHOW_PREDICTIONS_PREF).setOnPreferenceChangeListener(this);
+
+            try {
+                if (SmartspaceController.get(mContext).cY()) {
+                    findPreference(SMARTSPACE_PREF).setOnPreferenceClickListener(this);
+                } else {
+                    getPreferenceScreen().removePreference(findPreference("pref_smartspace"));
+                }
+            } catch (PackageManager.NameNotFoundException ex) {
+                Log.e("SettingsActivity", "Unable to load my own package info", ex);
+            }
+
+            findPreference(SHOW_PREDICTIONS_PREF).setOnPreferenceChangeListener(this);
         }
 
         @Override
@@ -197,11 +219,48 @@ public class SettingsActivity extends Activity {
         }
 
         @Override
-        public boolean onPreferenceClick(Preference preference) {
-            new NotificationAccessConfirmation().show(mFragmentManager, "notification_access");
-            return true;
+        public boolean onPreferenceChange(Preference preference, final Object newValue) {
+            switch (preference.getKey()) {
+                case SHOW_PREDICTIONS_PREF:
+                    if ((boolean) newValue) {
+                        return true;
+                    }
+                    SettingsActivity.SuggestionConfirmationFragment confirmationFragment = new SettingsActivity.SuggestionConfirmationFragment();
+                    confirmationFragment.setTargetFragment(this, 0);
+                    confirmationFragment.show(getFragmentManager(), preference.getKey());
+                    break;
+            }
+            return false;
         }
-    }
+
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            new NotificationAccessConfirmation().show(mFragmentManager, "notification_access");            
+            if (SMARTSPACE_PREF.equals(preference.getKey())) {
+                SmartspaceController.get(mContext).cZ();
+                return true;
+            }
+            return false;
+        }
+
+    public static class SuggestionConfirmationFragment extends DialogFragment implements DialogInterface.OnClickListener {
+        public void onClick(final DialogInterface dialogInterface, final int n) {
+            if (getTargetFragment() instanceof PreferenceFragment) {
+                Preference preference = ((PreferenceFragment) getTargetFragment()).findPreference(SHOW_PREDICTIONS_PREF);
+                if (preference instanceof TwoStatePreference) {
+                    ((TwoStatePreference) preference).setChecked(false);
+                }
+            }
+        }
+
+        public Dialog onCreateDialog(final Bundle bundle) {
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.title_disable_suggestions_prompt)
+                    .setMessage(R.string.msg_disable_suggestions_prompt)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(R.string.label_turn_off_suggestions, this).create();
+        }
+   }
 
     public static class NotificationAccessConfirmation
             extends DialogFragment implements DialogInterface.OnClickListener {
