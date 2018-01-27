@@ -498,11 +498,18 @@ public class Launcher extends BaseActivity
         recreate();
     }
 
-    protected void overrideTheme(boolean isDark, boolean supportsDarkText) {
-        if (isDark) {
-            setTheme(R.style.LauncherThemeDark);
-        } else if (supportsDarkText) {
-            setTheme(R.style.LauncherThemeDarkText);
+    public void overrideTheme(boolean isDark, boolean supportsDarkText) {
+        int flags = Utilities.getDevicePrefs(this).getInt("pref_persistent_flags", 0);
+        int orientFlag = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 16 : 8;
+        boolean useGoogleInOrientation = (orientFlag & flags) != 0;
+        if (useGoogleInOrientation && isDark) {
+            setTheme(R.style.GoogleSearchLauncherThemeDark);
+        } else if (useGoogleInOrientation && supportsDarkText && Utilities.ATLEAST_NOUGAT) {
+            setTheme(R.style.GoogleSearchLauncherThemeDarkText);
+        } else if (useGoogleInOrientation) {
+            setTheme(R.style.GoogleSearchLauncherTheme);
+        } else {
+            super.overrideTheme(isDark, supportsDarkText);
         }
     }
 
