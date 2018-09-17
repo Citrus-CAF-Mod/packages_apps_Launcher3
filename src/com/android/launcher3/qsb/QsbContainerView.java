@@ -125,6 +125,7 @@ public class QsbContainerView extends FrameLayout {
                 // There is no search provider, just show the default widget.
                 return getDefaultView(container, false /* show setup icon */);
             }
+
             Bundle opts = createBindOptions();
             Activity activity = getActivity();
             AppWidgetManager widgetManager = AppWidgetManager.getInstance(activity);
@@ -133,6 +134,16 @@ public class QsbContainerView extends FrameLayout {
             AppWidgetProviderInfo widgetInfo = widgetManager.getAppWidgetInfo(widgetId);
             boolean isWidgetBound = (widgetInfo != null) &&
                     widgetInfo.provider.equals(mWidgetInfo.provider);
+
+            if (mWidgetInfo.provider.getClassName().equals("com.google.android.googlequicksearchbox.SearchWidgetProvider")) {
+                try {
+                    int resId = activity.getPackageManager().getReceiverInfo(mWidgetInfo.provider, 128).metaData.getInt("com.google.android.gsa.searchwidget.alt_initial_layout_cqsb", -1);
+                    if (resId != -1) {
+                        mWidgetInfo.initialLayout = resId;
+                    }
+                } catch (Exception e) {
+                }
+            }
 
             int oldWidgetId = widgetId;
             if (!isWidgetBound) {
@@ -227,6 +238,9 @@ public class QsbContainerView extends FrameLayout {
             opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, size.top);
             opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, size.right);
             opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, size.bottom);
+            opts.putString("attached-launcher-identifier", getActivity().getPackageName());
+            opts.putString("requested-widget-style", "cqsb");
+
             return opts;
         }
 
